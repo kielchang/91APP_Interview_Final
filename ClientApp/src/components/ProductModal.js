@@ -3,7 +3,7 @@ import { Modal } from "semantic-ui-react";
 
 export default function ProductModal({ id, name, description }) {
   return (
-    <Modal trigger={<a href="javascript:void(0);">{name}</a>}>
+    <Modal trigger={<p style={{ color: "#4183c4", cursor: "pointer" }}>{name}</p>}>
       <Modal.Header>{name}</Modal.Header>
       <Modal.Content>
         <Modal.Description>{description}</Modal.Description>
