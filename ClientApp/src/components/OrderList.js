@@ -21,7 +21,7 @@ const OrderItem = ({ id, product, price, cost, status, checked, onSelected, onCa
   );
 };
 
-export default function OrderList({ datas, onSelected, onCancel }) {
+export default ({ datas, onSelected, onCancel }) => {
   return (
     <Table celled>
       <Table.Header>
@@ -42,4 +42,4 @@ export default function OrderList({ datas, onSelected, onCancel }) {
       </Table.Body>
     </Table>
   );
-}
+};

@@ -1,7 +1,7 @@
 import React from "react";
 import { Modal } from "semantic-ui-react";
 
-export default function ProductModal({ id, name, description }) {
+export default ({ id, name, description }) => {
   return (
     <Modal trigger={<p style={{ color: "#4183c4", cursor: "pointer" }}>{name}</p>}>
       <Modal.Header>{name}</Modal.Header>
@@ -10,4 +10,4 @@ export default function ProductModal({ id, name, description }) {
       </Modal.Content>
     </Modal>
   );
-}
+};

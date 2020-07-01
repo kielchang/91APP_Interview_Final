@@ -35,26 +35,36 @@ namespace _91App_Interview.Controllers
         [HttpPut("Shipped")]
         public async Task<ActionResult<IEnumerable<Order>>> ShippedOrders(string[] ids)
         {
-            var orders = await _context.Orders.Where(o => ids.Contains(o.Id)).ToListAsync();
-            foreach (var order in orders)
+            using (var transaction = _context.Database.BeginTransaction())
             {
-                order.Status = "To be shipped";
-
-                int ShippedOrdersCount = _context.ShippingOrders
-                    .Where(s => (s.CreatedDateTime > DateTime.Now.Date))
-                    .Count();
-
-                _context.ShippingOrders.Add(
-                    new ShippingOrder()
+                try
+                {
+                    var orders = await _context.Orders.Where(o => ids.Contains(o.Id)).ToListAsync();
+                    foreach (var order in orders)
                     {
-                        Id = $"SO{DateTime.Now.ToString("yyyyMMdd")}{$"{++ShippedOrdersCount}".PadLeft(4, '0')}",
-                        OrderId = order.Id,
-                        Status = "New",
-                        CreatedDateTime = DateTime.Now
-                    });
-                _context.SaveChanges();
-            }
+                        order.Status = "To be shipped";
 
+                        int ShippedOrdersCount = _context.ShippingOrders
+                            .Where(s => (s.CreatedDateTime > DateTime.Now.Date))
+                            .Count();
+
+                        _context.ShippingOrders.Add(
+                            new ShippingOrder()
+                            {
+                                Id = $"SO{DateTime.Now.ToString("yyyyMMdd")}{$"{++ShippedOrdersCount}".PadLeft(4, '0')}",
+                                OrderId = order.Id,
+                                Status = "New",
+                                CreatedDateTime = DateTime.Now
+                            });
+                        _context.SaveChanges();
+                    }
+
+                    transaction.Commit();
+                }
+                catch (Exception ex) {
+                    transaction.Rollback();
+                }
+            }
 
             return NoContent();
         }
